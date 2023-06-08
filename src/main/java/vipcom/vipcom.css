@@ -1,0 +1,15 @@
+.root{
+	-fx-background-image: url("vipcom.jpeg");
+}
+
+.button{
+	-fx-background-color: darkslateblue; -fx-text-fill: white;
+}
+
+.text1{
+	-fx-font: normal bold 20px 'serif';
+}
+
+.text2{
+	-fx-font: normal bold 20px 'serif';
+}
