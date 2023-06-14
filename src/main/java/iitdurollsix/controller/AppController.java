@@ -1,10 +1,12 @@
 package iitdurollsix.controller;
 
 import iitdurollsix.component.NumericField;
+import iitdurollsix.component.dbconnection.DbConnectionImpl;
+import iitdurollsix.component.dbconnection.DbConnectionInterface;
+import iitdurollsix.exception.RollSixCustomException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -19,6 +21,9 @@ import javafx.stage.Stage;
 
 
 public class AppController {
+	
+	DbConnectionInterface db = new DbConnectionImpl();
+	
 	public void drawScene(BorderPane root) {
 		HBox hbox = new HBox();
 		hbox.setPadding(new Insets(15,12,15,12));
@@ -75,7 +80,13 @@ private void drawLogin(BorderPane root) {
 	});
 	
 	loginBtn.setOnAction(e->{
-		loginCheck(txtUserName.getText(),txtPassword.getText());
+		try {
+			loginCheck(txtUserName.getText(),txtPassword.getText(),root);
+		} catch (RollSixCustomException e1) {
+
+			Alert alert = new Alert(AlertType.ERROR, "Error: "+e1.getMessage()+", time: "+e1.getExceptionTime(), ButtonType.OK);
+			alert.show();
+		}
 	});
 	
 	loginGrid.add(userName, 0, 5); 
@@ -92,9 +103,20 @@ private void drawLogin(BorderPane root) {
 
 }
 
-private void loginCheck(String userName, String password) {
-	Alert alert = new Alert(AlertType.ERROR, "Invalid Entry!"+userName+password, ButtonType.OK);
-	alert.show();
+private void loginCheck(String userName, String password, BorderPane root) throws RollSixCustomException {
+	if(db.validateUserNamePassword(userName, password)) {
+		drawDashboard(root);
+	}
+	else {
+
+		Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!", ButtonType.OK);
+		alert.show();
+	}
+	
+}
+
+private void drawDashboard(BorderPane root) {
+	
 	
 }
 
