@@ -1,4 +1,4 @@
-package iitdurollsix.component;
+package iitdurollsix.components;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;

@@ -2,44 +2,41 @@ package iitdurollsix.rollsixInterfacesImpl;
 
 import java.io.IOException;
 
+import iitdurollsix.components.LoginForm;
 import iitdurollsix.constant.StaticVariables;
-import iitdurollsix.controller.AppController;
 import iitdurollsix.rollsixInterfaces.RollSixInterface;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 
 public class RollSixInterfaceImpl implements RollSixInterface{
 	
-	private final Stage primaryStage;
-    private final BorderPane root;
-    public static String STYLESHEET_CASPIAN = "roll6.css";
-    private AppController appController = new AppController();
-
-	public RollSixInterfaceImpl(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-		this.root  = new BorderPane();
-		root.setPadding(new Insets(10, 20, 10, 20));
+	private Stage stage;
+	private Scene scene;
+	private BorderPane root;
+	
+	private LoginForm loginForm;
+	
+	
+	public RollSixInterfaceImpl(Stage stage) {
+		this.loginForm = new LoginForm();
+		this.stage = stage;
 	}
 	@Override
     public void initializeUserInterface() throws IOException{
-		appController.drawScene(root);
-    	Scene scene = new Scene(root, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
-    	scene.getStylesheets().add(RollSixInterfaceImpl.class.getResource("rollsix.css").toExternalForm());
-    	primaryStage.initStyle(StageStyle.TRANSPARENT);
-        primaryStage.setScene(scene);
-		primaryStage.setTitle("roll06");
-    	primaryStage.show();
 		
+		root = loginForm.drawLogin();
+		scene = new Scene(root, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
+		scene.getStylesheets().add(getClass().getClassLoader().getResource("assets/css/rollsix.css").toExternalForm());
+		stage.setScene(scene);
+		stage.show();
 	}
 	
-    	@Override
+    @Override
     public void showDialog(String message) {
         Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
         dialog.showAndWait();
@@ -81,7 +78,7 @@ public class RollSixInterfaceImpl implements RollSixInterface{
     
     @Override
     public void closeApp() {
-		primaryStage.close();
+		stage.close();
 	}
 
 }
