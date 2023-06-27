@@ -3,6 +3,7 @@ package iitdurollsix.components;
 
 import iitdurollsix.component.dbconnection.DbConnectionImpl;
 import iitdurollsix.component.dbconnection.DbConnectionInterface;
+import iitdurollsix.controller.AppController;
 import iitdurollsix.exception.RollSixCustomException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -20,10 +21,12 @@ import javafx.stage.Stage;
 
 public class LoginForm {
 	
-	DbConnectionInterface db;
-	Footer footer;
+	private AppController appController;
+	private DbConnectionInterface db;
+	private Footer footer;
 	
 	public LoginForm() {
+		this.appController = new AppController();
 		this.db = new DbConnectionImpl();
 		this.footer = new Footer();
 	}
@@ -72,6 +75,13 @@ public class LoginForm {
 		});
 		
 		register.setOnAction(e->{
+			try {
+				appController.switchToRegistration(e);
+			} catch (RollSixCustomException e1) {
+				System.out.println(e1.getLocalizedMessage());
+				e1.printStackTrace();
+				
+			}
 		});
 		
 		

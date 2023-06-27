@@ -18,15 +18,9 @@ public class AppController {
 	private BorderPane root;
 	
 	
-	private LoginForm loginForm;
-	private RegistrationForm registrationForm;
-	
-	public AppController() {
-		this.loginForm = new LoginForm();
-		this.registrationForm = new RegistrationForm();
-	}
 	
 	public void switchToLogin(ActionEvent e) {
+		LoginForm loginForm = new LoginForm();
 		root = loginForm.drawLogin();
 		stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
 		this.prepareScene(root);
@@ -36,6 +30,7 @@ public class AppController {
 	}
 	
 	public void switchToRegistration(ActionEvent e) throws RollSixCustomException {
+		RegistrationForm registrationForm = new RegistrationForm();
 		root = registrationForm.drawRegistrationForm();
 		stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
 		this.prepareScene(root);

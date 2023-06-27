@@ -15,10 +15,10 @@ public class App extends Application {
 	private RollSixInterface rollSixInterfaceImpl;
 	
 	@Override
-	public void start(Stage primaryStage) throws RollSixCustomException {
-		rollSixInterfaceImpl = new RollSixInterfaceImpl(primaryStage);
+	public void start(Stage stage) throws RollSixCustomException {
+		rollSixInterfaceImpl = new RollSixInterfaceImpl();
 		try {
-			rollSixInterfaceImpl.initializeUserInterface();
+			rollSixInterfaceImpl.initializeUserInterface(stage);
 		} catch(Exception e) {
 			e.printStackTrace();
 			throw new RollSixCustomException(e.getLocalizedMessage(), LocalDateTime.now());

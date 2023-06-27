@@ -15,22 +15,18 @@ import javafx.scene.layout.BorderPane;
 
 public class RollSixInterfaceImpl implements RollSixInterface{
 	
-	private Stage stage;
-	private Scene scene;
-	private BorderPane root;
 	
 	private LoginForm loginForm;
 	
 	
-	public RollSixInterfaceImpl(Stage stage) {
+	public RollSixInterfaceImpl() {
 		this.loginForm = new LoginForm();
-		this.stage = stage;
 	}
 	@Override
-    public void initializeUserInterface() throws IOException{
+    public void initializeUserInterface(Stage stage) throws IOException{
 		
-		root = loginForm.drawLogin();
-		scene = new Scene(root, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
+		BorderPane root = loginForm.drawLogin();
+		Scene scene = new Scene(root, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
 		scene.getStylesheets().add(getClass().getClassLoader().getResource("assets/css/rollsix.css").toExternalForm());
 		stage.setScene(scene);
 		stage.show();
@@ -78,7 +74,7 @@ public class RollSixInterfaceImpl implements RollSixInterface{
     
     @Override
     public void closeApp() {
-		stage.close();
+		//stage.close();
 	}
 
 }

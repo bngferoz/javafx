@@ -1,28 +1,24 @@
 package iitdurollsix.components;
 
-import iitdurollsix.constant.StaticVariables;
 import iitdurollsix.controller.AppController;
 import iitdurollsix.exception.RollSixCustomException;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 public class RegistrationForm {
 	
-	Footer footer;
+	private Footer footer;
+	private AppController appController;
 	
 	public RegistrationForm() {
 		this.footer = new Footer();
+		this.appController = new AppController();
 	}
 
 	public BorderPane drawRegistrationForm() throws RollSixCustomException {
@@ -30,9 +26,6 @@ public class RegistrationForm {
 		BorderPane registrationBorderPane = new BorderPane();
 		registrationBorderPane.setPadding(new Insets(10, 20, 10, 20));
 		
-		Scene loginScene = new Scene(registrationBorderPane, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
-		loginScene.getStylesheets().add(getClass().getClassLoader().getResource("assets/css/rollsix.css").toExternalForm());
-    	
 		
 		GridPane registrationGrid = new GridPane();
 		
@@ -52,6 +45,7 @@ public class RegistrationForm {
 
 		Button backToLogin = new Button("Already registerd? Login Here!");
 		backToLogin.setOnAction(e->{
+			appController.switchToLogin(e);
 		});
 		
 		HBox rButtons = new HBox(rRegister, backToLogin);
