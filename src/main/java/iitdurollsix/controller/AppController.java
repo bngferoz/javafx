@@ -1,4 +1,5 @@
 package iitdurollsix.controller;
+import iitdurollsix.components.Dashboard;
 import iitdurollsix.components.LoginForm;
 import iitdurollsix.components.RegistrationForm;
 import iitdurollsix.constant.StaticVariables;
@@ -23,6 +24,11 @@ public class AppController {
 		LoginForm loginForm = new LoginForm();
 		root = loginForm.drawLogin();
 		stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
+
+		//below line is responsible for omitting the top bar (containing the cross, minimize and enlarge icon)
+    	//stage.initStyle(StageStyle.TRANSPARENT);
+		
+		
 		this.prepareScene(root);
 		stage.setScene(scene);
 		stage.setTitle("Login Form");
@@ -39,9 +45,24 @@ public class AppController {
 		stage.show();
 	}
 	
+	public void switchToDashboard(ActionEvent e) throws RollSixCustomException {
+		Dashboard dashboard = new Dashboard();
+		root = dashboard.drawDashboard();
+		stage = (Stage) ((Node)e.getSource()).getScene().getWindow();
+		this.prepareScene(root);
+		stage.setScene(scene);
+		stage.setTitle("Dashboard");
+		stage.show();
+	}
+	
 	private void prepareScene(BorderPane root) {
 		scene = new Scene(root, StaticVariables.WINDOW_WIDTH, StaticVariables.WINDOW_HEIGHT);
 		scene.getStylesheets().add(getClass().getClassLoader().getResource("assets/css/rollsix.css").toExternalForm());
     	
+	}
+
+	public void registerUser(ActionEvent e) {
+		
+		
 	}
 }

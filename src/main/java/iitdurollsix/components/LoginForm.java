@@ -1,10 +1,12 @@
 package iitdurollsix.components;
 
 
-import iitdurollsix.component.dbconnection.DbConnectionImpl;
-import iitdurollsix.component.dbconnection.DbConnectionInterface;
+import java.sql.SQLException;
+
 import iitdurollsix.controller.AppController;
 import iitdurollsix.exception.RollSixCustomException;
+import iitdurollsix.rollsixInterfaces.DbConnectionInterface;
+import iitdurollsix.rollsixInterfacesImpl.DbConnectionImpl;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -50,7 +52,8 @@ public class LoginForm {
 		
 		Label userName = new Label("User Name:");
 		Label password = new Label("Password:");
-		Label msg = new Label("Please Enter User Name!");
+		Label userNameMsg = new Label("Please Enter User Name!");
+		Label passwordMsg = new Label("Plese Enter Password!");
 		
 		TextField txtUserName = new TextField();
 		PasswordField txtPassword = new PasswordField();
@@ -91,20 +94,39 @@ public class LoginForm {
 		});
 		
 		loginBtn.setOnAction(e->{
-			try {
-				loginCheck(txtUserName.getText(),txtPassword.getText(),loginBorderPane);
-			} catch (RollSixCustomException e1) {
-
-				Alert alert = new Alert(AlertType.ERROR, "Error: "+e1.getMessage()+", time: "+e1.getExceptionTime(), ButtonType.OK);
-				alert.show();
+			
+			if(txtUserName.getText().equals("")) {
+				userNameMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				userNameMsg.setText("Username can not be empty!");
 			}
-		});
-		
+			else if(txtPassword.getText().equals("")) {
+				passwordMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				passwordMsg.setText("Password can not be empty!");
+			}
+			else {
+				try {
+					if(loginCheck(txtUserName.getText(),txtPassword.getText(),loginBorderPane)) {
+						appController.switchToDashboard(e);
+					}
+					else {
+
+						Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!", ButtonType.OK);
+						alert.show();
+					}
+				}catch (Exception e1) {
+
+					Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!\n"+e1.getLocalizedMessage(), ButtonType.OK);
+					alert.show();
+				}
+
+			}
+			});		
 		loginGrid.add(userName, 0, 5); 
 		loginGrid.add(txtUserName, 1, 5);
-		loginGrid.add(msg, 2, 5);
+		loginGrid.add(userNameMsg, 2, 5);
 		loginGrid.add(password, 0, 6);       
 		loginGrid.add(txtPassword, 1, 6); 
+		loginGrid.add(passwordMsg, 2, 6);
 		loginGrid.add(buttons, 0, 7, 3, 1);
 		
 		loginBorderPane.setCenter(loginGrid);
@@ -115,21 +137,9 @@ public class LoginForm {
 
 
 
-	private void loginCheck(String userName, String password, BorderPane root) throws RollSixCustomException {
-		if(db.validateUserNamePassword(userName, password)) {
-			drawDashboard(root);
-		}
-		else {
-
-			Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!", ButtonType.OK);
-			alert.show();
-		}
-		
+	private boolean loginCheck(String userName, String password, BorderPane root) throws RollSixCustomException, SQLException {
+		return db.validateUserNamePassword(userName, password);
 	}
 
-	private void drawDashboard(BorderPane root) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }
