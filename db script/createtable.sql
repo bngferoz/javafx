@@ -7,6 +7,6 @@ create table rollsix.user(
    first_name VARCHAR(100) NOT NULL,
    last_name VARCHAR(100) NOT NULL,
    address VARCHAR(100) NOT NULL,
-   password VARCHAR(40) NOT NULL,
+   password VARCHAR(100) NOT NULL,
    PRIMARY KEY ( user_id )
 );

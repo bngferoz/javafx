@@ -2,6 +2,7 @@ package iitdurollsix.components;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import iitdurollsix.controller.AppController;
 import iitdurollsix.exception.RollSixCustomException;
@@ -60,32 +61,56 @@ public class RegistrationForm {
 		TextField rTxtUserName = new TextField();
 		PasswordField rTxtPassword = new PasswordField();
 		TextField txtFirstName = new TextField();
-		PasswordField txtLastName = new PasswordField();
+		TextField txtLastName = new TextField();
 		TextField txtAddress = new TextField();
 		
 		
 				
-		Button rRegister = new Button("Register");
+		Button rRegister = new Button("Register New User!");
 		rRegister.setOnAction(e->{
 			if(rTxtUserName.getText().equals("")) {
 				msgUserName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				msgUserName.setText("Email address can not be empty!");
 			}
+			else if(rTxtUserName.getText().length()>100) {
+				msgUserName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgUserName.setText("Maximum 100 characters are allowed!");
+			}
+			else if(!EmailValidator.getInstance().isValid(rTxtUserName.getText())) {
+				msgUserName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgUserName.setText("Please enter a valid email address!");
+			}
 			else if(rTxtPassword.getText().equals("")) {
 				msgPassword.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				msgPassword.setText("Password can not be empty!");
+			}
+			else if(rTxtPassword.getText().length()>100) {
+				msgPassword.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgPassword.setText("Maximum 100 characters are allowed!");
 			}
 			else if(txtFirstName.getText().equals("")) {
 				msgFirstName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				msgFirstName.setText("Firstname can not be empty!");
 			}
+			else if(txtFirstName.getText().length()>100) {
+				msgFirstName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgFirstName.setText("Maximum 100 characters are allowed!");
+			}
 			else if(txtLastName.getText().equals("")) {
 				msgLastName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				msgLastName.setText("Lastname can not be empty!");
 			}
+			else if(txtLastName.getText().length()>100) {
+				msgLastName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgLastName.setText("Maximum 100 characters are allowed!");
+			}
 			else if(txtAddress.getText().equals("")) {
 				msgAddress.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				msgAddress.setText("Address can not be empty!");
+			}
+			else if(txtAddress.getText().length()>100) {
+				msgAddress.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				msgAddress.setText("Maximum 100 characters are allowed!");
 			}
 			else {
 				try {
@@ -126,6 +151,13 @@ public class RegistrationForm {
 		registrationGrid.add(txtLastName, 1, 8);
 		registrationGrid.add(address, 0, 9); 
 		registrationGrid.add(txtAddress, 1, 9);
+		
+		registrationGrid.add(msgUserName, 2, 5);
+		registrationGrid.add(msgPassword, 2, 6);
+		registrationGrid.add(msgFirstName, 2, 7);
+		registrationGrid.add(msgLastName, 2, 8);
+		registrationGrid.add(msgAddress, 2, 9);
+		
 		
 		registrationGrid.add(rButtons, 0, 10, 3, 1);
 		

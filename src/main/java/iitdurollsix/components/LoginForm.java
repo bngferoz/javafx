@@ -3,6 +3,8 @@ package iitdurollsix.components;
 
 import java.sql.SQLException;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import iitdurollsix.controller.AppController;
 import iitdurollsix.exception.RollSixCustomException;
 import iitdurollsix.rollsixInterfaces.DbConnectionInterface;
@@ -63,14 +65,30 @@ public class LoginForm {
 
 		Button loginBtn = new Button("Login"); 
 		
-		Button clsbtn = new Button("Close App");
+		Button clsbtn = new Button("Close Window!");
 		
-		Button register = new Button("Register");
+		Button register = new Button("New User Registration!");
 		
-		HBox buttons = new HBox(resetBtn, loginBtn, clsbtn, register);
-		buttons.setPadding(new Insets(15,12,15,12));
-		buttons.setSpacing(10);
+		Button forgotPassword = new Button("Forgot Password?");
 		
+		HBox loginButtons = new HBox(resetBtn, loginBtn);
+		loginButtons.setPadding(new Insets(15,12,15,12));
+		loginButtons.setSpacing(10);
+		
+		HBox otherButtons = new HBox(clsbtn, register, forgotPassword);
+		otherButtons.setPadding(new Insets(15,12,15,12));
+		otherButtons.setSpacing(10);
+		
+		
+		forgotPassword.setOnAction(e->{
+			try {
+				appController.switchToForgotPassword(e);
+			} catch (Exception e1) {
+				Alert alert = new Alert(AlertType.ERROR, e1.getLocalizedMessage(), ButtonType.OK);
+				alert.show();
+				e1.printStackTrace();
+			}
+		});
 		
 		clsbtn.setOnAction(e->{
 			Stage stage = (Stage) clsbtn.getScene().getWindow();
@@ -96,17 +114,30 @@ public class LoginForm {
 		loginBtn.setOnAction(e->{
 			
 			if(txtUserName.getText().equals("")) {
+					userNameMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+					userNameMsg.setText("Username can not be empty!");
+			}
+			else if(txtUserName.getText().length()>100) {
 				userNameMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
-				userNameMsg.setText("Username can not be empty!");
+				userNameMsg.setText("Maximum 100 characters are allowed!");
+			}
+			else if(!EmailValidator.getInstance().isValid(txtUserName.getText())) {
+				userNameMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				userNameMsg.setText("Please enter a valid email address!");
 			}
 			else if(txtPassword.getText().equals("")) {
 				passwordMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
 				passwordMsg.setText("Password can not be empty!");
 			}
+			else if(txtPassword.getText().length()>100) {
+				passwordMsg.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
+				passwordMsg.setText("Maximum 100 characters are allowed!");
+			}
 			else {
 				try {
-					if(loginCheck(txtUserName.getText(),txtPassword.getText(),loginBorderPane)) {
-						appController.switchToDashboard(e);
+					String userNameFromDb = loginCheck(txtUserName.getText(),txtPassword.getText(),loginBorderPane);
+					if(!userName.equals("")) {
+						appController.switchToDashboard(e, userNameFromDb);
 					}
 					else {
 
@@ -120,14 +151,21 @@ public class LoginForm {
 				}
 
 			}
-			});		
+			});	
+		
+		txtPassword.setOnKeyPressed(event -> {
+            if (event.getCode().toString().equals("ENTER")) {
+                loginBtn.fire();
+            }
+        });
+		loginGrid.add(otherButtons, 0, 4, 3, 1);
 		loginGrid.add(userName, 0, 5); 
 		loginGrid.add(txtUserName, 1, 5);
 		loginGrid.add(userNameMsg, 2, 5);
 		loginGrid.add(password, 0, 6);       
 		loginGrid.add(txtPassword, 1, 6); 
 		loginGrid.add(passwordMsg, 2, 6);
-		loginGrid.add(buttons, 0, 7, 3, 1);
+		loginGrid.add(loginButtons, 0, 7, 3, 1);
 		
 		loginBorderPane.setCenter(loginGrid);
 		loginBorderPane.setBottom(footer.drawFooter());
@@ -137,7 +175,7 @@ public class LoginForm {
 
 
 
-	private boolean loginCheck(String userName, String password, BorderPane root) throws RollSixCustomException, SQLException {
+	private String loginCheck(String userName, String password, BorderPane root) throws RollSixCustomException, SQLException {
 		return db.validateUserNamePassword(userName, password);
 	}
 
