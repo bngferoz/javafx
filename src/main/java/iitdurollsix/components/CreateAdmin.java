@@ -2,6 +2,7 @@ package iitdurollsix.components;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+
 import org.apache.commons.validator.routines.EmailValidator;
 
 import iitdurollsix.controller.AppController;
@@ -20,23 +21,25 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
-public class RegistrationForm {
-	
+public class CreateAdmin {
 	private Footer footer;
 	private AppController appController;
 	private DbConnectionInterface db;
+	private String userName;
+	private AfterLoginMenu afterLoginMenu;
 	
-	
-	public RegistrationForm() {
+	public CreateAdmin(String userName) {
 		this.footer = new Footer();
 		this.db = new DbConnectionImpl();
 		this.appController = new AppController();
+		this.userName = userName;
+		this.afterLoginMenu = new AfterLoginMenu(userName);
 	}
 
-	public BorderPane drawRegistrationForm() throws RollSixCustomException {
+	public BorderPane drawAdminRegistrationForm() throws RollSixCustomException, SQLException {
 		
-		BorderPane registrationBorderPane = new BorderPane();
-		registrationBorderPane.setPadding(new Insets(10, 20, 10, 20));
+		BorderPane borderPane = new BorderPane();
+		borderPane.setPadding(new Insets(10, 20, 10, 20));
 		
 		
 		GridPane registrationGrid = new GridPane();
@@ -69,7 +72,7 @@ public class RegistrationForm {
 		
 		
 				
-		Button rRegister = new Button("Register New Client!");
+		Button rRegister = new Button("Register New Admin!");
 		rRegister.setOnAction(e->{
 			if(rTxtUserName.getText().equals("")) {
 				msgUserName.setStyle("-fx-text-fill: red; -fx-font-size: 16px; -fx-font-weight: bold;");
@@ -129,12 +132,12 @@ public class RegistrationForm {
 			}
 			else {
 				try {
-					if(registerUser(rTxtUserName.getText(), rTxtPassword.getText(), txtFirstName.getText(), txtLastName.getText(), txtAddress.getText(), registrationBorderPane)) {
-						Alert alert = new Alert(AlertType.INFORMATION, "User Registration is Successful!", ButtonType.OK);
+					if(registerUser(rTxtUserName.getText(), rTxtPassword.getText(), txtFirstName.getText(), txtLastName.getText(), txtAddress.getText(), borderPane)) {
+						Alert alert = new Alert(AlertType.INFORMATION, "Admin Registration is Successful!", ButtonType.OK);
 						alert.show();
-						appController.switchToLogin(e);
+						appController.switchToDashboard(e, userName);
 					}
-				} catch (RollSixCustomException e1) {
+				} catch (RollSixCustomException | SQLException e1) {
 					System.out.println(e1.getLocalizedMessage());
 					e1.printStackTrace();
 					Alert alert = new Alert(AlertType.ERROR, e1.getLocalizedMessage(), ButtonType.OK);
@@ -144,9 +147,15 @@ public class RegistrationForm {
 		});
 		
 
-		Button backToLogin = new Button("Already registerd? Login Here!");
+		Button backToLogin = new Button("Go Back!");
 		backToLogin.setOnAction(e->{
-			appController.switchToLogin(e);
+			try {
+				appController.switchToDashboard(e, userName);
+			} catch (RollSixCustomException | SQLException e1) {
+				Alert alert = new Alert(AlertType.ERROR, e1.getLocalizedMessage(), ButtonType.OK);
+				alert.show();
+				e1.printStackTrace();
+			}
 		});
 		
 		HBox rButtons = new HBox(rRegister, backToLogin);
@@ -178,16 +187,16 @@ public class RegistrationForm {
 		
 		
 		registrationGrid.add(rButtons, 0, 11, 3, 1);
+		borderPane.setTop(afterLoginMenu.getMenu());
+		borderPane.setCenter(registrationGrid);
+		borderPane.setBottom(footer.drawFooter());
 		
-		registrationBorderPane.setCenter(registrationGrid);
-		registrationBorderPane.setBottom(footer.drawFooter());
-		
-		return registrationBorderPane;
+		return borderPane;
 	}
 
 	private boolean registerUser(String email, String password, String firstName, String lastName, String address, BorderPane root) throws RollSixCustomException {
 		try {
-			return db.registerUser(email, password, firstName, lastName, address, "client");
+			return db.registerUser(email, password, firstName, lastName, address, "admin");
 		} catch (RollSixCustomException | SQLException e) {
 			System.out.println(e.getLocalizedMessage());
 			e.printStackTrace();
@@ -195,5 +204,4 @@ public class RegistrationForm {
 		}
 		
 	}
-	
 }

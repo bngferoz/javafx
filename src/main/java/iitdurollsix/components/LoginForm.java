@@ -67,7 +67,7 @@ public class LoginForm {
 		
 		Button clsbtn = new Button("Close Window!");
 		
-		Button register = new Button("New User Registration!");
+		Button register = new Button("New Client Registration!");
 		
 		Button forgotPassword = new Button("Forgot Password?");
 		
@@ -141,12 +141,12 @@ public class LoginForm {
 					}
 					else {
 
-						Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!", ButtonType.OK);
+						Alert alert = new Alert(AlertType.ERROR, "Please enter valid Username and Password!", ButtonType.OK);
 						alert.show();
 					}
 				}catch (Exception e1) {
 
-					Alert alert = new Alert(AlertType.ERROR, "Invalid Username or Password!\n"+e1.getLocalizedMessage(), ButtonType.OK);
+					Alert alert = new Alert(AlertType.ERROR, e1.getLocalizedMessage(), ButtonType.OK);
 					alert.show();
 				}
 
